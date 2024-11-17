@@ -1,0 +1,33 @@
+services:
+  app:
+    build: .
+    command: npm run start:dev
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: dbBookings
+      DB_PORT: 3306
+      DB_USERNAME: userBooking
+      DB_PASSWORD: passwordBooking
+      DB_DATABASE: bookings_db
+    depends_on:
+      - dbBookings
+    networks:
+      - bookings-network
+  dbBookings:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: passwordBooking
+      MYSQL_DATABASE: bookings_db
+      MYSQL_USER: userBooking
+      MYSQL_PASSWORD: passwordBooking
+    ports:
+      - "3308:3306"
+    networks:
+      - bookings-network
+    volumes:
+      - bookings_data:/var/lib/mysql
+volumes:
+  bookings_data:
+networks:
+  bookings-network:
