@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from "class-validator";
 
 export class UpdateBookingDto {
   @IsUUID()
@@ -24,4 +24,11 @@ export class UpdateBookingDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+    message: 'Time must be in format HH:mm'
+  })
+  time: string;
 }

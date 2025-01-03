@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookingsModule } from './bookings/bookings.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { BookingEntity } from './bookings/entities/booking.entity';
 
 @Module({
   imports: [
@@ -15,16 +16,19 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       envFilePath: ['.env', '.env.test', '.env.development', '.env.production'],
     }),
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
+        host: configService.get('DB_HOST') || 'localhost',
+        port: configService.get('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [BookingEntity],
         synchronize: true,
-        connectTimeout: 10000, // Aumentar el tiempo de espera de conexión a 10 segundos
+        logging: true,
+        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+        migrationsRun: true,
       }),
       inject: [ConfigService],
     }),

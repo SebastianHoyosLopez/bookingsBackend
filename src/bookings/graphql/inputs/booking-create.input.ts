@@ -1,25 +1,39 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsOptional } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, IsDate, IsEnum, IsBoolean, Matches } from "class-validator";
+import { StatusBookings } from "src/constants/status-booking.enum";
+
 
 @InputType()
 export class BookingCreateInput {
-  @Field()
-  @IsOptional()
-  code?: string;
+  @Field(() => String)
+  @IsNotEmpty()
+  @IsString()
+  code: string;
 
-  @Field()
-  @IsOptional()
+  @Field(() => Date)
+  @IsNotEmpty()
+  @IsDate()
   date: Date;
 
-  @Field()
-  @IsOptional()
-  status: string;
+  @Field(() => String)
+  @IsNotEmpty()
+  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+    message: 'Time must be in format HH:mm'
+  })
+  time: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   @IsOptional()
-  isActive: boolean;
+  @IsEnum(StatusBookings)
+  status?: StatusBookings;
 
-  @Field()
+  @Field(() => Boolean, { nullable: true })
   @IsOptional()
-  description: string;
+  @IsBoolean()
+  isActive?: boolean;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  description?: string;
 }

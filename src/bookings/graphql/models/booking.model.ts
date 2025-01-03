@@ -28,4 +28,7 @@ export class BookingModel {
 
   @Field({ nullable: true })
   deletedAt?: Date;
+
+  @Field()
+  time: string;
 }

@@ -1,31 +1,41 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { StatusBookings } from "src/constants/status-booking.enum";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, Index } from "typeorm";
 
 @Entity('booking')
 export class BookingEntity {
-    @PrimaryGeneratedColumn()
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column('varchar', { length: 30, nullable: false, comment: 'Unique code for the booking' })
-    code: string;
+  @Column('varchar', { length: 30, nullable: false })
+  @Index('IDX_BOOKING_CODE', { unique: true })
+  code: string;
 
-    @Column('timestamp', { nullable: false, comment: 'Date and time of the booking' })
-    date: Date;
+  @Column('timestamp', { nullable: false, comment: 'Date of the booking' })
+  date: Date;
 
-    @Column('varchar', { length: 50, default: 'Active', comment: 'Status of the booking' })
-    status: string;
+  @Column('time', { nullable: false, comment: 'Time of the booking' })
+  time: string;
 
-    @Column('boolean', { name: 'is_active', default: true, comment: 'Indicates if the booking is active' })
-    isActive: boolean;
+  @Column('enum', {
+    enum: StatusBookings,
+    default: StatusBookings.Pendiente
+  })
+  status: StatusBookings;
 
-    @Column('text', { nullable: true, comment: 'Description of the booking' })
-    description: string;
+  @Column('boolean', { name: 'is_active', default: true, comment: 'Indicates if the booking is active' })
+  isActive: boolean;
 
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp', comment: 'Creation date of the booking' })
-    createdAt: Date;
+  @Column('text', { nullable: true, comment: 'Description of the booking' })
+  description: string;
 
-    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: true, comment: 'Last update date of the booking' })
-    updatedAt: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp', comment: 'Creation date of the booking' })
+  createdAt: Date;
 
-    @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true, comment: 'Deletion date of the booking' })
-    deletedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: true, comment: 'Last update date of the booking' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true, comment: 'Deletion date of the booking' })
+  deletedAt: Date;
+
+
 }

@@ -13,9 +13,11 @@ RUN npm install
 # Copia el resto de los archivos del proyecto
 COPY . .
 
+RUN npm run build
+
 # Expone el puerto en el que corre la aplicación
 EXPOSE 3001
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:prod", "dbBookings:3306",]
 

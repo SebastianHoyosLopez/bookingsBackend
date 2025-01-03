@@ -16,6 +16,7 @@ services:
       - bookings-network
   dbBookings:
     image: mysql:latest
+    container_name: dbBookings
     environment:
       MYSQL_ROOT_PASSWORD: passwordBooking
       MYSQL_DATABASE: bookings_db
