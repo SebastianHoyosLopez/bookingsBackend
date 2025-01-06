@@ -17,6 +17,7 @@ services:
   dbBookings:
     image: mysql:latest
     container_name: dbBookings
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: passwordBooking
       MYSQL_DATABASE: bookings_db
@@ -30,5 +31,7 @@ services:
       - bookings_data:/var/lib/mysql
 volumes:
   bookings_data:
+    driver: local
 networks:
   bookings-network:
+    driver: bridge

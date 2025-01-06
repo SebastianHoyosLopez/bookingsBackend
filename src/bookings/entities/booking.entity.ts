@@ -2,12 +2,13 @@ import { StatusBookings } from "src/constants/status-booking.enum";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, Index } from "typeorm";
 
 @Entity('booking')
+
 export class BookingEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('varchar', { length: 30, nullable: false })
-  @Index('IDX_BOOKING_CODE', { unique: true })
+  @Index('IDX_BOOKING_CODE', { unique: false })
   code: string;
 
   @Column('timestamp', { nullable: false, comment: 'Date of the booking' })
@@ -28,6 +29,9 @@ export class BookingEntity {
   @Column('text', { nullable: true, comment: 'Description of the booking' })
   description: string;
 
+  @Column('varchar', { length: 255, nullable: false, comment: 'Ubicación de la presentación' })
+  location: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp', comment: 'Creation date of the booking' })
   createdAt: Date;
 
@@ -36,6 +40,4 @@ export class BookingEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true, comment: 'Deletion date of the booking' })
   deletedAt: Date;
-
-
 }

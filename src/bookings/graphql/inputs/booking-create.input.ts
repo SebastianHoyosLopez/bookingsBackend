@@ -36,4 +36,9 @@ export class BookingCreateInput {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @Field(() => String)
+  @IsNotEmpty()
+  @IsString()
+  location: string;
 }

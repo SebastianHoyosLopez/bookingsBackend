@@ -7,6 +7,7 @@ import { CreateBookingDto } from '../dtos/create-booking.dto';
 import { BookingFilterInput } from '../graphql/inputs/booking-filter.input';
 import { validateStatusTransition } from '../utils/validate-status';
 import { StatusBookings } from 'src/constants/status-booking.enum';
+import { Not } from 'typeorm';
 
 @Injectable()
 export class BookingsService {
@@ -53,6 +54,33 @@ export class BookingsService {
 
   // Método para crear una nueva reserva
   async create(bookingDto: CreateBookingDto): Promise<BookingModel> {
+    // Validar que la fecha no sea en el pasado
+    const now = new Date();
+    const bookingDate = new Date(bookingDto.date);
+    bookingDate.setHours(0, 0, 0, 0);
+
+    if (bookingDate < now) {
+      throw new Error('No se pueden crear reservas en fechas pasadas');
+    }
+
+    // Validar horario de atención
+    const [hours, minutes] = bookingDto.time.split(':').map(Number);
+    if (hours < 8 || hours >= 18) {
+      throw new Error('Las reservas solo se pueden realizar entre 8:00 y 18:00');
+    }
+
+    // Verificar si ya existe una reserva para la misma fecha y hora
+    const existingBooking = await this.bookingRepository.findOne({
+      where: {
+        date: bookingDto.date,
+        time: bookingDto.time
+      }
+    });
+
+    if (existingBooking) {
+      throw new Error(`Ya existe una reserva para la fecha ${bookingDto.date} a las ${bookingDto.time}`);
+    }
+
     const booking = this.bookingRepository.create({
       ...bookingDto,
       status: bookingDto.status as StatusBookings
@@ -66,6 +94,21 @@ export class BookingsService {
 
     if (!booking) {
       throw new NotFoundException(`Booking with ID ${id} not found`);
+    }
+
+    // Si se está actualizando la fecha o la hora, verificar disponibilidad
+    if (updateBookingDto.date || updateBookingDto.time) {
+      const existingBooking = await this.bookingRepository.findOne({
+        where: {
+          date: updateBookingDto.date || booking.date,
+          time: updateBookingDto.time || booking.time,
+          id: Not(id) // Excluir la reserva actual de la búsqueda
+        }
+      });
+
+      if (existingBooking) {
+        throw new Error(`Ya existe una reserva para la fecha y hora especificadas`);
+      }
     }
 
     // Validar la transición de estado si se está actualizando

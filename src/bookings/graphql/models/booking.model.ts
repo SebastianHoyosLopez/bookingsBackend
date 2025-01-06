@@ -30,5 +30,8 @@ export class BookingModel {
   deletedAt?: Date;
 
   @Field()
+  location: string;
+
+  @Field()
   time: string;
 }

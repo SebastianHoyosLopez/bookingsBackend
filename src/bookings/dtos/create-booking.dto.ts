@@ -27,4 +27,8 @@ export class CreateBookingDto {
     message: 'Time must be in format HH:mm'
   })
   time: string;
+
+  @IsNotEmpty()
+  @IsString()
+  location: string;
 }

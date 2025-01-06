@@ -19,5 +19,5 @@ RUN npm run build
 EXPOSE 3001
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run", "start:prod", "dbBookings:3306",]
+CMD ["npm", "run", "start:prod", "dbBookings:3306"]
 
