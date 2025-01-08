@@ -7,10 +7,13 @@ import { BookingsModule } from './bookings/bookings.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { BookingEntity } from './bookings/entities/booking.entity';
+import { PaymentsModule } from './payments/payments.module';
+import { PaymentEntity } from './payments/entities/payment.entity';
 
 @Module({
   imports: [
     BookingsModule,
+    PaymentsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.test', '.env.development', '.env.production'],
@@ -24,11 +27,11 @@ import { BookingEntity } from './bookings/entities/booking.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [BookingEntity],
+        entities: [BookingEntity, PaymentEntity],
         synchronize: true,
         logging: true,
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        migrationsRun: true,
+        migrationsRun: true,      
       }),
       inject: [ConfigService],
     }),
@@ -42,4 +45,4 @@ import { BookingEntity } from './bookings/entities/booking.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

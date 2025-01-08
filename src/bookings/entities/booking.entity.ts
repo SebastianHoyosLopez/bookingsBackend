@@ -2,7 +2,6 @@ import { StatusBookings } from "src/constants/status-booking.enum";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, Index } from "typeorm";
 
 @Entity('booking')
-
 export class BookingEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -31,4 +31,8 @@ export class UpdateBookingDto {
     message: 'Time must be in format HH:mm'
   })
   time?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
 }
