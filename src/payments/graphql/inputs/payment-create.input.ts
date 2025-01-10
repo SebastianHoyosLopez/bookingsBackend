@@ -1,5 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsString, IsNumber, IsDateString, Length, IsUUID, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsDateString, Length, IsUUID, IsNotEmpty, IsOptional } from 'class-validator';
 
 @InputType()
 export class PaymentCreateInput {
@@ -32,7 +32,8 @@ export class PaymentCreateInput {
     @Length(1, 20)
     paymentStatus: string;
 
-    @Field()
+    @Field({ nullable: true })
     @IsDateString()
-    paymentDate: Date;
+    @IsOptional()
+    paymentDate?: Date;
 }

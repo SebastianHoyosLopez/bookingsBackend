@@ -3,10 +3,9 @@ import { IsString, IsNumber, IsDateString, Length, IsUUID, IsOptional } from 'cl
 
 @InputType()
 export class PaymentUpdateInput {
-    @Field({ nullable: true })
+    @Field()
     @IsUUID()
-    @IsOptional()
-    id?: string;
+    id: string;
 
     @Field({ nullable: true })
     @IsString()

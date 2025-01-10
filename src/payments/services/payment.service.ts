@@ -8,6 +8,9 @@ export class PaymentService {
 
   createPayment(input: PaymentCreateInput) {
     const newPayment = { ...input, createdAt: new Date() };
+    if (!newPayment.paymentDate) {
+      newPayment.paymentDate = new Date();
+    }
     this.payments.push(newPayment);
     return newPayment;
   }

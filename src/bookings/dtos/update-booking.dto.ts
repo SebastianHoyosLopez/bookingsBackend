@@ -5,13 +5,13 @@ export class UpdateBookingDto {
   @IsNotEmpty()
   id: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  code: string;
+  code?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
-  date: Date;
+  date?: Date;
 
   @IsOptional()
   @IsString()

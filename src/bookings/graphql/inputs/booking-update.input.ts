@@ -8,13 +8,13 @@ export class BookingUpdateInput {
   @IsNotEmpty()
   id: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
-  code: string;
+  code?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
-  date: Date;
+  date?: Date;
 
   @Field()
   @IsOptional()

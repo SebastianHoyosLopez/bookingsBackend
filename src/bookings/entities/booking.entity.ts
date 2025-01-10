@@ -1,5 +1,6 @@
 import { StatusBookings } from "src/constants/status-booking.enum";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, Index } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, Index, OneToMany, JoinColumn } from "typeorm";
+import { PaymentEntity } from "src/payments/entities/payment.entity";
 
 @Entity('booking')
 export class BookingEntity {
@@ -39,4 +40,7 @@ export class BookingEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true, comment: 'Deletion date of the booking' })
   deletedAt: Date;
+
+  @OneToMany(() => PaymentEntity, payment => payment.booking, { cascade: true })
+  payments?: PaymentEntity[];
 }

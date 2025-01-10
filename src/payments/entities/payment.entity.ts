@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne } from "typeorm";
+import { BookingEntity } from "src/bookings/entities/booking.entity";
 
 @Entity('payment')
 export class PaymentEntity {
@@ -20,8 +21,8 @@ export class PaymentEntity {
   @Column('varchar', { length: 20 })
   paymentStatus: string;
 
-  @Column('date')
-  paymentDate: Date;
+  @Column('date', { nullable: true })
+  paymentDate?: Date;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp', comment: 'Creation date of the payment' })
   createdAt: Date;
@@ -31,4 +32,7 @@ export class PaymentEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true, comment: 'Deletion date of the payment' })
   deletedAt: Date;
+
+  @ManyToOne(() => BookingEntity, booking => booking.payments)
+  booking: BookingEntity;
 }

@@ -1,4 +1,5 @@
 import { ObjectType, Field } from "@nestjs/graphql";
+import { PaymentModel } from "src/payments/graphql/models/payment.model";
 
 @ObjectType()
 export class BookingModel {
@@ -17,8 +18,8 @@ export class BookingModel {
   @Field()
   isActive: boolean;
 
-  @Field()
-  description: string;
+  @Field({ nullable: true })
+  description?: string;
 
   @Field()
   createdAt: Date;
@@ -34,4 +35,7 @@ export class BookingModel {
 
   @Field()
   time: string;
+
+  @Field(() => [PaymentModel], { nullable: true })
+  payments?: PaymentModel[];
 }
