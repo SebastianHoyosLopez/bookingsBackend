@@ -19,7 +19,5 @@ export class PaymentModel {
 
   @Field()
   paymentStatus: string;
-
-  @Field({ nullable: true })
-  paymentDate?: Date;
+  
 }

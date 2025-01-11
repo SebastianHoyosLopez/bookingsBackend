@@ -81,26 +81,24 @@ export class BookingsService {
         throw new Error(`Ya existe una reserva para la fecha ${bookingDto.date} a las ${bookingDto.time}`);
       }
 
+      // Creación de la reserva
+      const booking = manager.create(BookingEntity, {
+        ...bookingDto,
+        status: bookingDto.status as StatusBookings
+      });
+
+      const savedBooking = await manager.save(booking);
+
       // Creación de las entidades de pago si se proporcionan
-      let payments = [];
       if (paymentDtos.length > 0) {
-        payments = paymentDtos.map(paymentDto => {
-          if (!paymentDto.paymentDate) {
-            paymentDto.paymentDate = new Date();
-          }
-          return manager.create(PaymentEntity, paymentDto);
+        const payments = paymentDtos.map(paymentDto => {   
+          const payment = manager.create(PaymentEntity, paymentDto);
+          payment.booking = savedBooking; // Asociar el pago a la reserva guardada
+          return payment;
         });
         await manager.save(payments);
       }
 
-      // Creación de la reserva
-      const booking = manager.create(BookingEntity, {
-        ...bookingDto,
-        status: bookingDto.status as StatusBookings,
-        payments: payments
-      });
-
-      const savedBooking = await manager.save(booking);
       return this.toModel(savedBooking);
     });
   }
@@ -169,17 +167,35 @@ export class BookingsService {
         throw new NotFoundException(`Booking with ID ${id} not found`);
       }
 
+      // Validar disponibilidad de fecha y hora
+      const existingBooking = await this.bookingRepository.findOne({
+        where: {
+          date: updateBookingDto.date || booking.date,
+          time: updateBookingDto.time || booking.time,
+          id: Not(id) // Excluir la reserva actual de la búsqueda
+        }
+      });
+
+      if (existingBooking) {
+        throw new Error(`No se puede actualizar la reserva al horario ${updateBookingDto.time || booking.time} ya que está ocupado`);
+      }
+
       // Actualizar la reserva
       Object.assign(booking, updateBookingDto);
 
       // Actualizar o agregar pagos
       for (const paymentDto of updatePaymentDtos) {
-        let payment = booking.payments.find(p => p.id === paymentDto.id);
-        if (payment) {
+        let payment;
+        if (paymentDto.id) {
           // Actualizar pago existente
-          Object.assign(payment, paymentDto);
+          payment = booking.payments.find(p => p.id === paymentDto.id);
+          if (payment) {
+            Object.assign(payment, paymentDto);
+          } else {
+            throw new NotFoundException(`Payment with ID ${paymentDto.id} not found`);
+          }
         } else {
-          // Agregar nuevo pago
+          // Crear nuevo pago
           payment = manager.create(PaymentEntity, paymentDto);
           payment.booking = booking;
           booking.payments.push(payment);

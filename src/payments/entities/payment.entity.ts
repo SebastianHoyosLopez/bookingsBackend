@@ -21,9 +21,6 @@ export class PaymentEntity {
   @Column('varchar', { length: 20 })
   paymentStatus: string;
 
-  @Column('date', { nullable: true })
-  paymentDate?: Date;
-
   @CreateDateColumn({ name: 'created_at', type: 'timestamp', comment: 'Creation date of the payment' })
   createdAt: Date;
 

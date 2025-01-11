@@ -4,11 +4,6 @@ import { IsString, IsNumber, IsDateString, Length, IsUUID, IsNotEmpty, IsOptiona
 @InputType()
 export class PaymentCreateInput {
     @Field()
-    @IsUUID()
-    @IsNotEmpty()
-    id: string;
-
-    @Field()
     @IsString()
     @Length(1, 30)
     code: string;
@@ -32,8 +27,4 @@ export class PaymentCreateInput {
     @Length(1, 20)
     paymentStatus: string;
 
-    @Field({ nullable: true })
-    @IsDateString()
-    @IsOptional()
-    paymentDate?: Date;
 }

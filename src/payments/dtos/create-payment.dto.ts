@@ -21,7 +21,4 @@ export class CreatePaymentDto {
   @Length(1, 20)
   paymentStatus: string;
 
-  @IsDateString()
-  @IsOptional()
-  paymentDate?: Date;
 }

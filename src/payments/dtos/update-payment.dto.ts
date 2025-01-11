@@ -2,7 +2,7 @@ import { IsString, IsNumber, IsOptional, IsDateString, Length, IsUUID, IsNotEmpt
 
 export class UpdatePaymentDto {
     @IsUUID()
-    @IsNotEmpty()
+    @IsOptional()
     id: string;
 
     @IsString()
@@ -29,7 +29,4 @@ export class UpdatePaymentDto {
     @IsOptional()
     paymentStatus?: string;
 
-    @IsDateString()
-    @IsOptional()
-    paymentDate?: Date;
 } 
